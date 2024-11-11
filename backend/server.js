@@ -27,16 +27,17 @@ const FormSchema = new mongoose.Schema({
   age: Number,
   sexe: String,
   poid: Number,
+  universite: String,
 });
 
 const users = mongoose.model('users', FormSchema);
 
 app.post('/saveFormData', async (req, res) => {
-    const { prenom, age, sexe, poid } = req.body;
+    const { prenom, age, sexe, poid, universite } = req.body;
   
     try {
       // Utilise directement Mongoose pour insérer les données dans la collection
-      const result = await users.create({ prenom, age, sexe, poid });
+      const result = await users.create({ prenom, age, sexe, poid, universite });
       res.status(200).send({ message: 'Données enregistrées avec succès', data: result });
     } catch (err) {
       console.error(err);

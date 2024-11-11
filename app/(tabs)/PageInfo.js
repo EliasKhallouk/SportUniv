@@ -7,12 +7,14 @@ export default function PageInfo({ navigation }) {
   const [age, setAge] = useState('');
   const [sexe, setSexe] = useState('');
   const [poid, setPoid] = useState('');
+  const [universite, setUniversite] = useState('');
   const [isPickerVisible, setIsPickerVisible] = useState(false);
 
   const prenomLabelAnim = useRef(new Animated.Value(0)).current;
   const ageLabelAnim = useRef(new Animated.Value(0)).current;
-  const sexeLabelAnim = useRef(new Animated.Value(0)).current;
   const poidLabelAnim = useRef(new Animated.Value(0)).current;
+  const univLabelAnim = useRef(new Animated.Value(0)).current;
+
 
   const handleFocus = (labelAnim) => {
     Animated.timing(labelAnim, {
@@ -69,6 +71,7 @@ export default function PageInfo({ navigation }) {
           age,
           sexe,
           poid,
+          universite,
         }),
       });
   
@@ -163,6 +166,17 @@ export default function PageInfo({ navigation }) {
               onChangeText={setPoid}
               onFocus={() => handleFocus(poidLabelAnim)}
               onBlur={() => handleBlur(poidLabelAnim, poid)}
+            />
+          </View>
+
+          <View style={styles.inputContainer}>
+            <Animated.Text style={animatedLabelStyle(univLabelAnim)}>Université</Animated.Text>
+            <TextInput
+              style={styles.input}
+              value={universite}
+              onChangeText={setUniversite}
+              onFocus={() => handleFocus(univLabelAnim)}
+              onBlur={() => handleBlur(univLabelAnim, universite)}
             />
           </View>
           <TouchableOpacity style={styles.submitButton} onPress={saveFormData}>
