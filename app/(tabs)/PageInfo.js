@@ -57,6 +57,38 @@ export default function PageInfo({ navigation }) {
     }),
   });
 
+  const saveFormData = async () => {
+    try {
+      const response = await fetch('http://192.168.2.54:3000/saveFormData', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          prenom,
+          age,
+          sexe,
+          poid,
+        }),
+      });
+  
+      const data = await response.json();
+      
+      if (response.ok) {
+        // Si la réponse est OK, tu peux afficher un message de succès
+        console.log('Données envoyées avec succès', data);
+        alert('Données envoyées avec succès');
+      } else {
+        // Si une erreur est survenue côté serveur
+        console.error('Erreur:', data.message);
+        alert('Erreur lors de l\'enregistrement');
+      }
+    } catch (error) {
+      console.error('Erreur de connexion', error);
+      alert('Erreur de connexion au serveur');
+    }
+  };
+
   return (
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'} keyboardVerticalOffset={0}>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -133,10 +165,15 @@ export default function PageInfo({ navigation }) {
               onBlur={() => handleBlur(poidLabelAnim, poid)}
             />
           </View>
+          <TouchableOpacity style={styles.submitButton} onPress={saveFormData}>
+            <Text style={styles.submitButtonText}>Envoyer</Text>
+          </TouchableOpacity>
         </ScrollView>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   );
+
+  
 }
 
 const styles = StyleSheet.create({
@@ -192,4 +229,17 @@ const styles = StyleSheet.create({
     width: '80%',
     padding: 20,
   },
+  submitButton: {
+    backgroundColor: '#4CAF50',
+    padding: 15,
+    borderRadius: 8,
+    marginVertical: 20,
+    alignItems: 'center',
+  },
+  
+  submitButtonText: {
+    fontSize: 16,
+    color: '#fff',
+    fontWeight: 'bold',
+  }  
 });
