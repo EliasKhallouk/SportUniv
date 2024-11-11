@@ -24,9 +24,9 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="index2"
+        name="PageSeance"
         options={{
-          title: 'Home',
+          title: 'Seance',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'barbell' : 'barbell-outline'} color={color} />
           ),

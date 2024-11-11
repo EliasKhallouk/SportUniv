@@ -1,0 +1,15 @@
+[
+    {
+      "nom": "Séance Cardio",
+      "temps": 45,
+      "cible": "Endurance",
+      "niveau": "Intermédiaire"
+    },
+    {
+      "nom": "Séance Musculore",
+      "temps": 60,
+      "cible": "Force",
+      "niveau": "Avancé"
+    }
+  ]
+  

@@ -45,8 +45,27 @@ app.post('/saveFormData', async (req, res) => {
     }
 });
 
+const seanceSchema = new mongoose.Schema({
+    nom: { type: String, required: true },
+    temps: { type: Number, required: true }, // Entier pour le temps
+    cible: { type: String, required: true },
+    niveau: { type: String, required: true },
+  });
+  
+  // Enregistrement du modèle
+  const seances = mongoose.model('seances', seanceSchema);
+// Route pour récupérer toutes les séances
+app.get('/getSessions', async (req, res) => {
+    try {
+      const sessions = await seances.find(); // Remplace 'Seance' par le nom de ton modèle
+      res.status(200).json(sessions);
+    } catch (error) {
+      res.status(500).json({ message: 'Erreur lors de la récupération des séances' });
+    }
+  });
   
 
-  app.listen(PORT, () => {
-    console.log(`Serveur en cours d'exécution sur http://localhost:${PORT}`);
-  });
+
+app.listen(PORT, () => {
+console.log(`Serveur en cours d'exécution sur http://localhost:${PORT}`);
+});
