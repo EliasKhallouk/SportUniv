@@ -28,7 +28,13 @@ export default function RootLayout() {
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
-        <Stack.Screen name="Etapes"  />
+        <Stack.Screen
+          name="Etapes"
+          options={{
+            title: 'Étapes',
+            headerBackTitle: 'Retour',
+          }}
+        />
       </Stack>
     </ThemeProvider>
   );

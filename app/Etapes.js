@@ -1,74 +1,62 @@
-import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import { TabBarIcon } from '@/components/navigation/TabBarIcon';
-import { useNavigation } from '@react-navigation/native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Image, FlatList, TouchableOpacity, Alert } from 'react-native';
+import { useRoute } from '@react-navigation/native';
 
+export default function EtapesPage() {
+  const route = useRoute();
+  const { etapes } = route.params.session;
+  const [steps, setSteps] = useState(etapes);
 
-export default function SeancesList() {
-  const [sessions, setSessions] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const navigation = useNavigation(); // Add navigation hook
+  // Function to toggle the state of the step and update in the backend
+  const toggleStepState = async (index) => {
+    const updatedSteps = [...steps];
+    const step = updatedSteps[index];
+    step.etat = !step.etat; // Toggle the state
 
-  useEffect(() => {
-    // Fonction pour récupérer les séances depuis l'API
-    const fetchSessions = async () => {
-      try {
-        const response = await fetch('http://192.168.2.54:3000/getSessions'); // Adresse de ton serveur
-        const data = await response.json();
-        setSessions(data);
-      } catch (error) {
-        console.error('Erreur de récupération des séances:', error);
-      } finally {
-        setLoading(false);
+    // Update the state in the database
+    try {
+      const response = await fetch(`http://192.168.2.54:3000/updateStep`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId: route.params.session._id,
+          stepName: step.nom,
+          etat: step.etat,
+        }),
+      });
+
+      if (response.ok) {
+        setSteps(updatedSteps);
+      } else {
+        Alert.alert('Erreur', 'La mise à jour a échoué.');
       }
-    };
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour:', error);
+      Alert.alert('Erreur', 'Impossible de se connecter au serveur.');
+    }
+  };
 
-    fetchSessions();
-  }, []);
-
-  // Si les données sont en cours de chargement
-  if (loading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </View>
-    );
-  }
-
-  // Si aucune étape n'est disponible
-  if (sessions.length === 0) {
-    return (
-      <View style={styles.emptyContainer}>
-        <Text style={styles.emptyText}>Aucune étape disponible.</Text>
-      </View>
-    );
-  }
-
-  // Affichage des séances
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Liste des étapes</Text>
+      <Text style={styles.title}>Étapes de la Séance</Text>
       <FlatList
-        data={sessions}
-        keyExtractor={(item) => item._id}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            onPress={() => navigation.navigate('Etapes')} // Navigate on item press
-            style={styles.sessionContainer}
-          >
-            <Text style={styles.sessionTextTitle}>
-              {item.nom} par {item.creePar.prenom}
-            </Text>
-            <Text style={styles.sessionText}>
-              <TabBarIcon name="time-outline" size={16} color="#000" /> Temps: {item.temps} minutes
-            </Text>
-            <Text style={styles.sessionText}>
-              <TabBarIcon name="disc-outline" size={16} color="#000" /> Cible: {item.cible}
-            </Text>
-            <Text style={styles.sessionText}>
-              <TabBarIcon name="trending-up-outline" size={16} color="#000" /> Niveau: {item.niveau}
-            </Text>
-          </TouchableOpacity>
+        data={steps}
+        keyExtractor={(item) => item.nom}
+        renderItem={({ item, index }) => (
+          <View style={styles.stepContainer}>
+            <Text style={styles.stepName}>{item.nom}</Text>
+            <Image source={{ uri: item.photo }} style={styles.stepImage} />
+            <Text style={styles.stepDetail}>Séries: {item.series}</Text>
+            <Text style={styles.stepDetail}>Répétitions: {item.repetitions}</Text>
+            <TouchableOpacity
+              style={[styles.button, item.etat ? styles.completed : styles.notCompleted]}
+              onPress={() => toggleStepState(index)}
+            >
+              <Text style={styles.buttonText}>
+                {item.etat ? 'Marquer comme non fait' : 'Marquer comme fait'}
+              </Text>
+            </TouchableOpacity>
+          </View>
         )}
       />
     </View>
@@ -82,15 +70,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#f4f4f4',
   },
   title: {
-    fontSize: 40,
+    fontSize: 30,
     fontWeight: 'bold',
-    marginTop: 150,
-    marginBottom: 50,
+    marginBottom: 20,
     textAlign: 'center',
   },
-  sessionContainer: {
+  stepContainer: {
     padding: 15,
-    marginBottom: 10,
+    marginBottom: 15,
     backgroundColor: '#fff',
     borderRadius: 8,
     shadowColor: '#000',
@@ -98,28 +85,35 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     shadowOffset: { width: 0, height: 2 },
   },
-  sessionText: {
+  stepName: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  stepImage: {
+    width: '100%',
+    height: 150,
+    borderRadius: 8,
+    marginBottom: 10,
+  },
+  stepDetail: {
     fontSize: 16,
-    marginBottom: 5,
     color: '#333',
   },
-  sessionTextTitle: {
-    fontSize: 25,
-    marginBottom: 5,
-    color: '#333',
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
+  button: {
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 10,
     alignItems: 'center',
   },
-  emptyContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+  completed: {
+    backgroundColor: '#4CAF50',
   },
-  emptyText: {
-    fontSize: 18,
-    color: '#888',
+  notCompleted: {
+    backgroundColor: '#f44336',
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });

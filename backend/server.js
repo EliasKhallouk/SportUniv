@@ -36,7 +36,6 @@ app.post('/saveFormData', async (req, res) => {
     const { prenom, age, sexe, poid, universite } = req.body;
   
     try {
-      // Utilise directement Mongoose pour insérer les données dans la collection
       const result = await users.create({ prenom, age, sexe, poid, universite });
       res.status(200).send({ message: 'Données enregistrées avec succès', data: result });
     } catch (err) {
@@ -46,27 +45,63 @@ app.post('/saveFormData', async (req, res) => {
 });
 
 const seanceSchema = new mongoose.Schema({
-    nom: { type: String, required: true },
-    temps: { type: Number, required: true }, // Entier pour le temps
-    cible: { type: String, required: true },
-    niveau: { type: String, required: true },
-    creePar: { type: mongoose.Schema.Types.ObjectId, ref: 'users', required: true }, // Ajout de la référence vers 'users'
-  });
-  
-  // Enregistrement du modèle
-  const seances = mongoose.model('seances', seanceSchema);
+  nom: { type: String, required: true },
+  temps: { type: Number, required: true },
+  cible: { type: String, required: true },
+  niveau: { type: String, required: true },
+  creePar: { type: mongoose.Schema.Types.ObjectId, ref: 'users', required: true },
+  etapes: [
+    {
+      nom: String,
+      series: Number,
+      repetitions: Number,
+      photo: String,
+      etat: { type: Boolean, default: false }, // Etat par défaut à false
+    }
+  ]
+});
+
+// Enregistrement du modèle
+const seances = mongoose.model('seances', seanceSchema);
+
 // Route pour récupérer toutes les séances
 app.get('/getSessions', async (req, res) => {
   try {
-    const sessions = await seances.find().populate('creePar', 'prenom'); // Ajout de populate pour récupérer le prénom
+    const sessions = await seances.find().populate('creePar', 'prenom');
     res.status(200).json(sessions);
   } catch (error) {
     res.status(500).json({ message: 'Erreur lors de la récupération des séances' });
   }
 });
 
+// Route pour mettre à jour l'état d'une étape spécifique
+app.post('/updateStep', async (req, res) => {
+  const { sessionId, stepName, etat } = req.body;
+  
+  try {
+    // Met à jour l'état de l'étape dans la séance spécifique
+    const session = await seances.findOne({ _id: sessionId });
+    
+    if (!session) {
+      return res.status(404).json({ message: 'Séance introuvable' });
+    }
 
+    const step = session.etapes.find(e => e.nom === stepName);
+    if (!step) {
+      return res.status(404).json({ message: 'Étape introuvable' });
+    }
+
+    // Modifier l'état de l'étape
+    step.etat = etat;
+    await session.save();
+
+    res.status(200).json({ message: 'État de l\'étape mis à jour avec succès', session });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Erreur lors de la mise à jour de l\'état de l\'étape' });
+  }
+});
 
 app.listen(PORT, () => {
-console.log(`Serveur en cours d'exécution sur http://localhost:${PORT}`);
+  console.log(`Serveur en cours d'exécution sur http://localhost:${PORT}`);
 });

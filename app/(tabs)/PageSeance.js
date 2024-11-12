@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { useNavigation } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 
 export default function SeancesList() {
@@ -53,7 +53,7 @@ export default function SeancesList() {
         keyExtractor={(item) => item._id}
         renderItem={({ item }) => (
           <TouchableOpacity
-            onPress={() => navigation.navigate('Etapes')} // Navigate on item press
+            onPress={() => navigation.navigate('Etapes', { session: item })}
             style={styles.sessionContainer}
           >
             <Text style={styles.sessionTextTitle}>
@@ -69,6 +69,7 @@ export default function SeancesList() {
               <TabBarIcon name="trending-up-outline" size={16} color="#000" /> Niveau: {item.niveau}
             </Text>
           </TouchableOpacity>
+
         )}
       />
     </View>

@@ -1,17 +1,62 @@
 [
-    {
-      "nom": "Séance Cardio",
-      "temps": 45,
-      "cible": "Endurance",
-      "niveau": "Intermédiaire",
-      "creePar": "67317c85a75579443fc90a4e"
-    },
-    {
-      "nom": "Séance Musculore",
-      "temps": 60,
-      "cible": "Force",
-      "niveau": "Avancé",
-      "creePar": "67318384d2c207372066417b"
-    }
-  ]
-  
+  {
+    "nom": "Séance Cardio",
+    "temps": 45,
+    "cible": "Endurance",
+    "niveau": "Intermédiaire",
+    "creePar": "67317c85a75579443fc90a4e",
+    "etapes": [
+      {
+        "nom": "Échauffement",
+        "series": 1,
+        "repetitions": 15,
+        "photo": "https://imgs.search.brave.com/IjiHbP16S-3dVUylyDk98OvveW-IPANOfEcpBItEg3I/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9wbHVz/LnVuc3BsYXNoLmNv/bS9wcmVtaXVtX3Bo/b3RvLTE2NjUyMDM2/MjE4MjgtMTJiZGQ0/YTdhZmI0P2ZtPWpw/ZyZxPTYwJnc9MzAw/MCZpeGxpYj1yYi00/LjAuMyZpeGlkPU0z/d3hNakEzZkRCOE1I/eHpaV0Z5WTJoOE1U/ZDhmQ1ZETXlWQk9X/Tm9ZWFZtWm1WdFpX/NTBmR1Z1ZkRCOGZE/QjhmSHd3",
+        "etat": false
+      },
+      {
+        "nom": "Course rapide",
+        "series": 3,
+        "repetitions": 10,
+        "photo": "https://imgs.search.brave.com/duG3fB2FcHXN0du--cmX7k2G-IyJ2Ddp6KfKEVMMAtU/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvNjYz/ODYwMDU4L2ZyL3Bo/b3RvL2RhbnMtbGEt/c2FsbGUtZGUtc3Bv/cnQuanBnP3M9NjEy/eDYxMiZ3PTAmaz0y/MCZjPWlzOUNrb2N0/T0ktdUZCMF8wRnNs/VHJ4S0NPZmFZU0pl/SWFyTkxkN09MS0U9",
+        "etat": false
+      },
+      {
+        "nom": "Étirements",
+        "series": 1,
+        "repetitions": 10,
+        "photo": "https://imgs.search.brave.com/kw6-pVlKeJ8vqwFlK8v_C7wMcMt2x3TS_EiMbL8sBEc/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jb250/ZW50cy5tZWRpYWRl/Y2F0aGxvbi5jb20v/czg3MDI4OC9rJDQy/NDVjNDlkODUzNjBk/YzJjZWQ5MTFlOGQy/NGQwZmIxLzE5MjB4/MC80MDk2cHQyNDU4/LzgxOTJ4Y3I0NjA4/L2V0aXJlbWVudHMt/Y291cmJhdHVyZXMu/anBnP2Zvcm1hdD1h/dXRv",
+        "etat": false
+      }
+    ]
+  },
+  {
+    "nom": "Séance Musculore",
+    "temps": 60,
+    "cible": "Force",
+    "niveau": "Avancé",
+    "creePar": "67318384d2c207372066417b",
+    "etapes": [
+      {
+        "nom": "Échauffement avec haltères",
+        "series": 2,
+        "repetitions": 12,
+        "photo": "https://imgs.search.brave.com/9lfTXVlJOMCEOWrIoLkMoXUVKIdw9quK6ms-rMDyMJw/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5mb29kc3ByaW5n/LmNvbS9tYWdhemlu/ZS9wdWJsaWMvdXBs/b2Fkcy8yMDIzLzAz/L1Blc2FzX0ZJTkFM/LmpwZw",
+        "etat": false
+      },
+      {
+        "nom": "Développé couché",
+        "series": 4,
+        "repetitions": 8,
+        "photo": "https://imgs.search.brave.com/SV3uzlj9Xn1qOtrmrvxnrPnTcFH1PTs3fzoF6BegJPo/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTM2/ODU3OTM5MS9mci9w/aG90by9lbnRyYSVD/MyVBRW5lbWVudC1k/ZS1saG9tbWUtYXUt/ZCVDMyVBOXZlbG9w/cCVDMyVBOS1jb3Vj/aCVDMyVBOS5qcGc_/cz02MTJ4NjEyJnc9/MCZrPTIwJmM9OFNE/Q01IS1NpZWFpQjVr/MVZ4S2JyVGhGSG56/cGVKWjZOWEt6RWVl/UHhSOD0",
+        "etat": false
+      },
+      {
+        "nom": "Squats",
+        "series": 3,
+        "repetitions": 15,
+        "photo": "https://imgs.search.brave.com/GtqzUU3tvYpjz-tiOxPsFtHh4f-wo_4JgGPL4Y9gUzU/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90My5m/dGNkbi5uZXQvanBn/LzAzLzEzLzg1LzM2/LzM2MF9GXzMxMzg1/MzY1OV9LQUxjN1FX/aFhEQ2ZldGpScE9G/RW4xZWhUdTNSNDZj/Ri5qcGc",
+        "etat": false
+      }
+    ]
+  }
+]
