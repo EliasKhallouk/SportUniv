@@ -50,20 +50,21 @@ const seanceSchema = new mongoose.Schema({
     temps: { type: Number, required: true }, // Entier pour le temps
     cible: { type: String, required: true },
     niveau: { type: String, required: true },
+    creePar: { type: mongoose.Schema.Types.ObjectId, ref: 'users', required: true }, // Ajout de la référence vers 'users'
   });
   
   // Enregistrement du modèle
   const seances = mongoose.model('seances', seanceSchema);
 // Route pour récupérer toutes les séances
 app.get('/getSessions', async (req, res) => {
-    try {
-      const sessions = await seances.find(); // Remplace 'Seance' par le nom de ton modèle
-      res.status(200).json(sessions);
-    } catch (error) {
-      res.status(500).json({ message: 'Erreur lors de la récupération des séances' });
-    }
-  });
-  
+  try {
+    const sessions = await seances.find().populate('creePar', 'prenom'); // Ajout de populate pour récupérer le prénom
+    res.status(200).json(sessions);
+  } catch (error) {
+    res.status(500).json({ message: 'Erreur lors de la récupération des séances' });
+  }
+});
+
 
 
 app.listen(PORT, () => {

@@ -3,13 +3,15 @@
       "nom": "Séance Cardio",
       "temps": 45,
       "cible": "Endurance",
-      "niveau": "Intermédiaire"
+      "niveau": "Intermédiaire",
+      "creePar": "67317c85a75579443fc90a4e"
     },
     {
       "nom": "Séance Musculore",
       "temps": 60,
       "cible": "Force",
-      "niveau": "Avancé"
+      "niveau": "Avancé",
+      "creePar": "67318384d2c207372066417b"
     }
   ]
   

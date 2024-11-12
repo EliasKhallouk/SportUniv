@@ -35,11 +35,11 @@ export default function SeancesList() {
     );
   }
 
-  // Si aucune séance n'est disponible
+  // Si aucune étape n'est disponible
   if (sessions.length === 0) {
     return (
       <View style={styles.emptyContainer}>
-        <Text style={styles.emptyText}>Aucune séance disponible.</Text>
+        <Text style={styles.emptyText}>Aucune étape disponible.</Text>
       </View>
     );
   }
@@ -47,7 +47,7 @@ export default function SeancesList() {
   // Affichage des séances
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Liste des Séances</Text>
+      <Text style={styles.title}>Liste des étapes</Text>
       <FlatList
         data={sessions}
         keyExtractor={(item) => item._id}
