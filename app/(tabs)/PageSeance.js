@@ -30,7 +30,7 @@ export default function SeancesList() {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator color="#0000ff" />
       </View>
     );
   }
