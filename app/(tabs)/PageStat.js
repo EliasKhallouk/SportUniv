@@ -1,8 +1,8 @@
+import { format, parseISO } from 'date-fns';
+import { fr } from 'date-fns/locale';
 import React, { useEffect, useState } from 'react';
 import { Dimensions, ScrollView, StyleSheet, Text } from 'react-native';
 import { LineChart, PieChart } from 'react-native-chart-kit';
-import { format, parseISO } from 'date-fns';
-import { fr } from 'date-fns/locale';
 
 export default function SeancesStat() {
   const [data, setData] = useState([]);
