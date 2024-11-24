@@ -49,8 +49,10 @@ export default function EtapesPage() {
           <View style={styles.stepContainer}>
             <Text style={styles.stepName}>{item.nom}</Text>
             <Image source={{ uri: item.photo }} style={styles.stepImage} />
-            <Text style={styles.stepDetail}>Séries: {item.series}</Text>
-            <Text style={styles.stepDetail}>Répétitions: {item.repetitions}</Text>
+            <View style={styles.stepDetailsContainer}>
+              <Text style={styles.stepDetail}>Séries: {item.series}</Text>
+              <Text style={styles.stepDetail}>Répétitions: {item.repetitions}</Text>
+            </View>
             <TouchableOpacity
               style={[styles.button, item.etat ? styles.completed : styles.notCompleted]}
               onPress={() => toggleStepState(index)}
@@ -99,8 +101,14 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 10,
   },
+  stepDetailsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
+    marginBottom: 10,
+  },
   stepDetail: {
-    fontSize: 16,
+    fontSize: 15,
     color: '#333',
   },
   button: {
@@ -110,10 +118,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   completed: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#5b7411',
   },
   notCompleted: {
-    backgroundColor: '#f44336',
+    backgroundColor: '#8C1818',
   },
   buttonText: {
     color: '#fff',

@@ -59,15 +59,18 @@ export default function SeancesList() {
             <Text style={styles.sessionTextTitle}>
               {item.nom} par {item.creePar.prenom}
             </Text>
-            <Text style={styles.sessionText}>
-              <TabBarIcon name="time-outline" size={16} color="#000" /> Temps: {item.temps} minutes
-            </Text>
-            <Text style={styles.sessionText}>
-              <TabBarIcon name="disc-outline" size={16} color="#000" /> Cible: {item.cible}
-            </Text>
-            <Text style={styles.sessionText}>
-              <TabBarIcon name="trending-up-outline" size={16} color="#000" /> Niveau: {item.niveau}
-            </Text>
+            <View style={styles.iconTextContainer}>
+              <TabBarIcon name="time-outline" size={32} color="#5b7411" />
+              <Text style={styles.sessionText}> Temps: {item.temps} minutes</Text>
+            </View>
+            <View style={styles.iconTextContainer}>
+              <TabBarIcon name="disc-outline" size={32} color="#5b7411" />
+              <Text style={styles.sessionText}> Cible: {item.cible}</Text>
+            </View>
+            <View style={styles.iconTextContainer}>
+              <TabBarIcon name="trending-up-outline" size={32} color="#5b7411" />
+              <Text style={styles.sessionText}> Niveau: {item.niveau}</Text>
+            </View>
           </TouchableOpacity>
 
         )}
@@ -122,5 +125,10 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: 18,
     color: '#888',
+  },
+  iconTextContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
   },
 });

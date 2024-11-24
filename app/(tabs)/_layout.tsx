@@ -11,7 +11,7 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: "#5b7411",
         headerShown: false,
       }}>
       <Tabs.Screen
@@ -33,9 +33,9 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="PageStat"
         options={{
-          title: 'Explore',
+          title: 'Statistique',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'bar-chart' : 'bar-chart-outline'} color={color} />
           ),
