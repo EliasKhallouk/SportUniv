@@ -1,57 +1,60 @@
 import { format, parseISO } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import React, { useEffect, useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Dimensions, ScrollView, StyleSheet, Text } from 'react-native';
 import { LineChart, PieChart } from 'react-native-chart-kit';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function SeancesStat() {
   const [data, setData] = useState([]);
   const [pieData, setPieData] = useState([]);
 
-  useEffect(() => {
-    const fetchStatistiques = async () => {
-      try {
-        const response = await fetch('http://192.168.2.54:3000/getStatistiques');
-        const result = await response.json();
+  const fetchStatistiques = async () => {
+    try {
+      const response = await fetch('http://192.168.2.54:3000/getStatistiques');
+      const result = await response.json();
 
-        // Aggregate data by specific date
-        const aggregatedData = result.reduce((acc, item) => {
-          const date = format(parseISO(item.date), 'yyyy-MM-dd');
-          if (!acc[date]) {
-            acc[date] = 0;
-          }
-          acc[date] += item.tasksCompleted;
-          return acc;
-        }, {});
+      // Aggregate data by specific date
+      const aggregatedData = result.reduce((acc, item) => {
+        const date = format(parseISO(item.date), 'yyyy-MM-dd');
+        if (!acc[date]) {
+          acc[date] = 0;
+        }
+        acc[date] += item.tasksCompleted;
+        return acc;
+      }, {});
 
-        // Transform the aggregated data for the LineChart
-        const lineChartData = Object.keys(aggregatedData).map(date => ({
-          date: format(parseISO(date), 'EEE', { locale: fr }), // Transform date to day of the week and date
-          value: aggregatedData[date],
-        }));
+      // Transform the aggregated data for the LineChart
+      const lineChartData = Object.keys(aggregatedData).map(date => ({
+        date: format(parseISO(date), 'EEE', { locale: fr }), // Transform date to day of the week and date
+        value: aggregatedData[date],
+      }));
 
-        // Sort the data by date
-        lineChartData.sort((a, b) => new Date(a.date) - new Date(b.date));
+      // Sort the data by date
+      lineChartData.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-        // Limit to the last 7 days
-        const limitedData = lineChartData.slice(-7);
+      // Limit to the last 7 days
+      const limitedData = lineChartData.slice(-7);
 
-        setData(limitedData);
+      setData(limitedData);
 
-        // Transform the data for the PieChart
-        const pieChartData = [
-          { name: 'Intermédiaire', population: result.filter(item => item.level === 'Intermédiaire').length, color: '#5b7411', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-          { name: 'Débutant', population: result.filter(item => item.level === 'Débutant').length, color: '#000000', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-          { name: 'Avancé', population: result.filter(item => item.level === 'Avancé').length, color: '#8C1818', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-        ];
-        setPieData(pieChartData);
-      } catch (error) {
-        console.error('Erreur lors de la récupération des statistiques:', error);
-      }
-    };
+      // Transform the data for the PieChart
+      const pieChartData = [
+        { name: 'Intermédiaire', population: result.filter(item => item.level === 'Intermédiaire').length, color: '#5b7411', legendFontColor: '#7F7F7F', legendFontSize: 15 },
+        { name: 'Débutant', population: result.filter(item => item.level === 'Débutant').length, color: '#000000', legendFontColor: '#7F7F7F', legendFontSize: 15 },
+        { name: 'Avancé', population: result.filter(item => item.level === 'Avancé').length, color: '#8C1818', legendFontColor: '#7F7F7F', legendFontSize: 15 },
+      ];
+      setPieData(pieChartData);
+    } catch (error) {
+      console.error('Erreur lors de la récupération des statistiques:', error);
+    }
+  };
 
-    fetchStatistiques();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchStatistiques();
+    }, [])
+  );
 
   const chartData = {
     labels: data.map(item => item.date),
