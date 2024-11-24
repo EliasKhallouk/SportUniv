@@ -9,13 +9,14 @@ export default function EtapesPage() {
 
   // Function to toggle the state of the step and update in the backend
   const toggleStepState = async (index) => {
-    const updatedSteps = [...steps];
-    const step = updatedSteps[index];
-    step.etat = !step.etat; // Toggle the state
+    setSteps((prevSteps) => {
+      const updatedSteps = [...prevSteps];
+      const step = { ...updatedSteps[index] }; // Create a new object
+      step.etat = !step.etat; // Toggle the state
+      updatedSteps[index] = step; // Update the step in the array
 
-    // Update the state in the database
-    try {
-      const response = await fetch(`http://192.168.2.54:3000/updateStep`, {
+      // Update the state in the database
+      fetch(`http://192.168.2.54:3000/updateStep`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -23,17 +24,19 @@ export default function EtapesPage() {
           stepName: step.nom,
           etat: step.etat,
         }),
-      });
+      })
+        .then((response) => {
+          if (!response.ok) {
+            Alert.alert('Erreur', 'La mise à jour a échoué.');
+          }
+        })
+        .catch((error) => {
+          console.error('Erreur lors de la mise à jour:', error);
+          Alert.alert('Erreur', 'Impossible de se connecter au serveur.');
+        });
 
-      if (response.ok) {
-        setSteps(updatedSteps);
-      } else {
-        Alert.alert('Erreur', 'La mise à jour a échoué.');
-      }
-    } catch (error) {
-      console.error('Erreur lors de la mise à jour:', error);
-      Alert.alert('Erreur', 'Impossible de se connecter au serveur.');
-    }
+      return updatedSteps;
+    });
   };
 
   return (

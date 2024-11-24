@@ -146,6 +146,7 @@ export default function PageInfo({ navigation }) {
                         setSexe(itemValue);
                         setIsPickerVisible(false);
                       }}
+                      itemStyle={{ color: 'black' }}
                     >
                       <Picker.Item label="Sélectionner votre sexe" value="" />
                       <Picker.Item label="Homme" value="Homme" />
