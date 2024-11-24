@@ -1,87 +1,43 @@
-import React, { useState } from 'react';
-import { Dimensions, StyleSheet, Text, View, ScrollView } from 'react-native';
-import { LineChart, PieChart } from 'react-native-chart-kit';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { VictoryChart, VictoryLine, VictoryTheme } from 'victory-native';
 
 export default function SeancesStat() {
-  const [data, setData] = useState([
-    { date: 'Lun', value: 3 },
-    { date: 'Mar', value: 5 },
-    { date: 'Mer', value: 8 },
-    { date: 'Jeu', value: 0 },
-    { date: 'Ven', value: 9 },
-    { date: 'Sam', value: 3 },
-    { date: 'Dim', value: 3 },
-  ]);
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState([]);
 
-  const chartData = {
-    labels: data.map(item => item.date),
-    datasets: [
-      {
-        data: data.map(item => item.value),
-      },
-    ],
-  };
+  useEffect(() => {
+    // Simulate fetching data
+    setTimeout(() => {
+      setData([
+        { date: '2023-01-01', value: 30 },
+        { date: '2023-02-01', value: 45 },
+        { date: '2023-03-01', value: 28 },
+        { date: '2023-04-01', value: 80 },
+        { date: '2023-05-01', value: 99 },
+        { date: '2023-06-01', value: 43 },
+      ]);
+      setLoading(false);
+    }, 1000);
+  }, []);
 
-  const pieChartData = [
-    { name: 'Intermédiaire', population: 3, color: '#5b7411', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-    { name: 'Débutant', population: 4, color: '#000000', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-    { name: 'Avancé', population: 1, color: '#8C1818', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-  ];
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
+
+  const lineChartData = data.map(item => ({ x: item.date, y: item.value }));
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.title}>Statistiques</Text>
-      <Text style={styles.chartTextTitle}>Nombre de taches éffectueés cette semaine</Text>
-      <LineChart
-        data={chartData}
-        width={Dimensions.get('window').width - 40}
-        height={220}
-        yAxisLabel=""
-        yAxisSuffix=" "
-        chartConfig={{
-          backgroundColor: '#5b7411',
-          backgroundGradientFrom: '#5b7411',
-          backgroundGradientTo: '',
-          decimalPlaces: 0, // Set decimal places to 0 to ensure integer values
-          color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-          labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-          style: {
-            borderRadius: 16,
-          },
-          propsForDots: {
-            r: '6',
-            strokeWidth: '2',
-            stroke: '#000000',
-          },
-        }}
-        bezier
-        style={{
-          marginVertical: 8,
-          borderRadius: 16,
-        }}
-      />
-      <Text style={styles.chartTextTitle}>Niveau des séances éffectueés cette semaine</Text>
-      <PieChart
-        data={pieChartData}
-        width={Dimensions.get('window').width - 40}
-        height={220}
-        chartConfig={{
-          backgroundColor: '#e26a00',
-          backgroundGradientFrom: '#fb8c00',
-          backgroundGradientTo: '#ffa726',
-          color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-          labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-        }}
-        accessor="population"
-        backgroundColor="transparent"
-        paddingLeft="15"
-        absolute
-        style={{
-          marginVertical: 8,
-          borderRadius: 16,
-        }}
-      />
-    </ScrollView>
+    <View style={styles.container}>
+      <Text style={styles.title}>Statistiques des Séances</Text>
+      <VictoryChart theme={VictoryTheme.material}>
+        <VictoryLine data={lineChartData} />
+      </VictoryChart>
+    </View>
   );
 }
 
@@ -92,17 +48,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#f4f4f4',
   },
   title: {
-    fontSize: 40,
+    fontSize: 24,
     fontWeight: 'bold',
-    marginTop: 150,
-    marginBottom: 10,
+    marginBottom: 20,
     textAlign: 'center',
   },
-  chartTextTitle: {
-    fontSize: 20,
-    marginBottom: 0,
-    color: '#333',
-    textAlign: 'center',
-    marginTop: 40,
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

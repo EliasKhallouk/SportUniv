@@ -1,0 +1,37 @@
+[
+    {
+        "date": "2024-11-17",
+        "tasksCompleted": 5,
+        "level": "Intermédiaire"
+    },
+    {
+        "date": "2024-11-18",
+        "tasksCompleted": 7,
+        "level": "Débutant"
+    },
+    {
+        "date": "2024-11-19",
+        "tasksCompleted": 3,
+        "level": "Avancé"
+    },
+    {
+        "date": "2024-11-20",
+        "tasksCompleted": 6,
+        "level": "Intermédiaire"
+    },
+    {
+        "date": "2024-11-21",
+        "tasksCompleted": 4,
+        "level": "Débutant"
+    },
+    {
+        "date": "2024-11-22",
+        "tasksCompleted": 8,
+        "level": "Avancé"
+    },
+    {
+        "date": "2024-11-23",
+        "tasksCompleted": 2,
+        "level": "Intermédiaire"
+    }
+]

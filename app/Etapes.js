@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, FlatList, TouchableOpacity, Alert } from 'react-native';
 import { useRoute } from '@react-navigation/native';
+import { format } from 'date-fns';
 
 export default function EtapesPage() {
   const route = useRoute();
-  const { etapes } = route.params.session;
+  const { etapes, niveau } = route.params.session;
   const [steps, setSteps] = useState(etapes);
 
   // Function to toggle the state of the step and update in the backend
@@ -28,6 +29,9 @@ export default function EtapesPage() {
         .then((response) => {
           if (!response.ok) {
             Alert.alert('Erreur', 'La mise à jour a échoué.');
+          } else {
+            // Update the statistics
+            updateStatistics(step.etat);
           }
         })
         .catch((error) => {
@@ -37,6 +41,28 @@ export default function EtapesPage() {
 
       return updatedSteps;
     });
+  };
+
+  const updateStatistics = async (etat) => {
+    const today = format(new Date(), 'yyyy-MM-dd');
+    try {
+      const response = await fetch('http://192.168.2.54:3000/updateStatistics', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          date: today,
+          level: niveau,
+          increment: etat ? 1 : -1,
+        }),
+      });
+
+      if (!response.ok) {
+        Alert.alert('Erreur', 'La mise à jour des statistiques a échoué.');
+      }
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour des statistiques:', error);
+      Alert.alert('Erreur', 'Impossible de se connecter au serveur.');
+    }
   };
 
   return (
