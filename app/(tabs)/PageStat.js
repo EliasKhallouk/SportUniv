@@ -1,9 +1,9 @@
+import { useFocusEffect } from '@react-navigation/native';
 import { format, parseISO } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import React, { useState, useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Dimensions, ScrollView, StyleSheet, Text } from 'react-native';
 import { LineChart, PieChart } from 'react-native-chart-kit';
-import { useFocusEffect } from '@react-navigation/native';
 
 export default function SeancesStat() {
   const [data, setData] = useState([]);
@@ -76,7 +76,7 @@ export default function SeancesStat() {
         chartConfig={{
           backgroundColor: '#5b7411',
           backgroundGradientFrom: '#5b7411',
-          backgroundGradientTo: '',
+          backgroundGradientTo: '#5b7412',
           decimalPlaces: 0, // Set decimal places to 0 to ensure integer values
           color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
           labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
