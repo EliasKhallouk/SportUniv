@@ -40,9 +40,9 @@ export default function SeancesStat() {
 
       // Transform the data for the PieChart
       const pieChartData = [
-        { name: 'Intermédiaire', population: result.filter(item => item.level === 'Intermédiaire').length, color: '#5b7411', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-        { name: 'Débutant', population: result.filter(item => item.level === 'Débutant').length, color: '#000000', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-        { name: 'Avancé', population: result.filter(item => item.level === 'Avancé').length, color: '#8C1818', legendFontColor: '#7F7F7F', legendFontSize: 15 },
+        { name: 'Intermédiaire', population: result.filter(item => item.level === 'Intermédiaire' && item.tasksCompleted > 0).length, color: '#5b7411', legendFontColor: '#7F7F7F', legendFontSize: 15 },
+        { name: 'Débutant', population: result.filter(item => item.level === 'Débutant' && item.tasksCompleted > 0).length, color: '#000000', legendFontColor: '#7F7F7F', legendFontSize: 15 },
+        { name: 'Avancé', population: result.filter(item => item.level === 'Avancé' && item.tasksCompleted > 0).length, color: '#8C1818', legendFontColor: '#7F7F7F', legendFontSize: 15 },
       ];
       setPieData(pieChartData);
     } catch (error) {
