@@ -1,43 +1,119 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { VictoryChart, VictoryLine, VictoryTheme } from 'victory-native';
+import { Dimensions, ScrollView, StyleSheet, Text } from 'react-native';
+import { LineChart, PieChart } from 'react-native-chart-kit';
+import { format, parseISO } from 'date-fns';
+import { fr } from 'date-fns/locale';
 
 export default function SeancesStat() {
-  const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
+  const [pieData, setPieData] = useState([]);
 
   useEffect(() => {
-    // Simulate fetching data
-    setTimeout(() => {
-      setData([
-        { date: '2023-01-01', value: 30 },
-        { date: '2023-02-01', value: 45 },
-        { date: '2023-03-01', value: 28 },
-        { date: '2023-04-01', value: 80 },
-        { date: '2023-05-01', value: 99 },
-        { date: '2023-06-01', value: 43 },
-      ]);
-      setLoading(false);
-    }, 1000);
+    const fetchStatistiques = async () => {
+      try {
+        const response = await fetch('http://192.168.2.54:3000/getStatistiques');
+        const result = await response.json();
+
+        // Aggregate data by specific date
+        const aggregatedData = result.reduce((acc, item) => {
+          const date = format(parseISO(item.date), 'yyyy-MM-dd');
+          if (!acc[date]) {
+            acc[date] = 0;
+          }
+          acc[date] += item.tasksCompleted;
+          return acc;
+        }, {});
+
+        // Transform the aggregated data for the LineChart
+        const lineChartData = Object.keys(aggregatedData).map(date => ({
+          date: format(parseISO(date), 'EEE', { locale: fr }), // Transform date to day of the week and date
+          value: aggregatedData[date],
+        }));
+
+        // Sort the data by date
+        lineChartData.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+        // Limit to the last 7 days
+        const limitedData = lineChartData.slice(-7);
+
+        setData(limitedData);
+
+        // Transform the data for the PieChart
+        const pieChartData = [
+          { name: 'Intermédiaire', population: result.filter(item => item.level === 'Intermédiaire').length, color: '#5b7411', legendFontColor: '#7F7F7F', legendFontSize: 15 },
+          { name: 'Débutant', population: result.filter(item => item.level === 'Débutant').length, color: '#000000', legendFontColor: '#7F7F7F', legendFontSize: 15 },
+          { name: 'Avancé', population: result.filter(item => item.level === 'Avancé').length, color: '#8C1818', legendFontColor: '#7F7F7F', legendFontSize: 15 },
+        ];
+        setPieData(pieChartData);
+      } catch (error) {
+        console.error('Erreur lors de la récupération des statistiques:', error);
+      }
+    };
+
+    fetchStatistiques();
   }, []);
 
-  if (loading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <Text>Loading...</Text>
-      </View>
-    );
-  }
-
-  const lineChartData = data.map(item => ({ x: item.date, y: item.value }));
+  const chartData = {
+    labels: data.map(item => item.date),
+    datasets: [
+      {
+        data: data.map(item => item.value),
+      },
+    ],
+  };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Statistiques des Séances</Text>
-      <VictoryChart theme={VictoryTheme.material}>
-        <VictoryLine data={lineChartData} />
-      </VictoryChart>
-    </View>
+    <ScrollView style={styles.container}>
+      <Text style={styles.title}>Statistiques</Text>
+      <Text style={styles.chartTextTitle}>Nombre de taches éffectueés cette semaine</Text>
+      <LineChart
+        data={chartData}
+        width={Dimensions.get('window').width - 40}
+        height={220}
+        chartConfig={{
+          backgroundColor: '#5b7411',
+          backgroundGradientFrom: '#5b7411',
+          backgroundGradientTo: '',
+          decimalPlaces: 0, // Set decimal places to 0 to ensure integer values
+          color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+          labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+          style: {
+            borderRadius: 16,
+          },
+          propsForDots: {
+            r: '6',
+            strokeWidth: '2',
+            stroke: '#000000',
+          },
+        }}
+        bezier
+        style={{
+          marginVertical: 8,
+          borderRadius: 16,
+        }}
+      />
+      <Text style={styles.chartTextTitle}>Niveau des séances éffectueés cette semaine</Text>
+      <PieChart
+        data={pieData}
+        width={Dimensions.get('window').width - 40}
+        height={220}
+        chartConfig={{
+          backgroundColor: '#e26a00',
+          backgroundGradientFrom: '#fb8c00',
+          backgroundGradientTo: '#ffa726',
+          color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+          labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+        }}
+        accessor="population"
+        backgroundColor="transparent"
+        paddingLeft="15"
+        absolute
+        style={{
+          marginVertical: 8,
+          borderRadius: 16,
+        }}
+      />
+    </ScrollView>
   );
 }
 
@@ -48,14 +124,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#f4f4f4',
   },
   title: {
-    fontSize: 24,
+    fontSize: 40,
     fontWeight: 'bold',
-    marginBottom: 20,
+    marginTop: 150,
+    marginBottom: 10,
     textAlign: 'center',
   },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+  chartTextTitle: {
+    fontSize: 20,
+    marginBottom: 0,
+    color: '#333',
+    textAlign: 'center',
+    marginTop: 40,
   },
 });
