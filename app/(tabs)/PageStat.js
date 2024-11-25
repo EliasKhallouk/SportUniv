@@ -74,7 +74,7 @@ export default function SeancesStat() {
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.title}>Statistiques</Text>
-      <Text style={styles.chartTextTitle}>Nombre de taches éffectueés cette semaine</Text>
+      <Text style={styles.chartTextTitle}>Nombre de <Text style={{ fontWeight: 'bold' }}>taches</Text> éffectueés cette <Text style={{ fontWeight: 'bold' }}>semaine</Text></Text>
       <LineChart
         data={chartData}
         width={Dimensions.get('window').width - 40}
@@ -101,7 +101,7 @@ export default function SeancesStat() {
           borderRadius: 16,
         }}
       />
-      <Text style={styles.chartTextTitle}>Niveau des séances éffectueés ce mois</Text>
+      <Text style={styles.chartTextTitle}>Niveau des <Text style={{ fontWeight: 'bold' }}>séances</Text> éffectueés ce <Text style={{ fontWeight: 'bold' }}>mois</Text></Text>
       <PieChart
         data={pieData}
         width={Dimensions.get('window').width - 40}
