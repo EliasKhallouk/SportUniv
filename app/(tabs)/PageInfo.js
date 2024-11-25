@@ -181,7 +181,7 @@ export default function PageInfo({ navigation }) {
             />
           </View>
           <TouchableOpacity style={styles.submitButton} onPress={saveFormData}>
-            <Text style={styles.submitButtonText}>Envoyer</Text>
+            <Text style={styles.submitButtonText}>Sauvegarder</Text>
           </TouchableOpacity>
         </ScrollView>
       </TouchableWithoutFeedback>

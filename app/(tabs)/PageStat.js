@@ -1,5 +1,5 @@
 import { useFocusEffect } from '@react-navigation/native';
-import { format, parseISO } from 'date-fns';
+import { format, parseISO, startOfToday } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import React, { useCallback, useState } from 'react';
 import { Dimensions, ScrollView, StyleSheet, Text } from 'react-native';
@@ -23,6 +23,12 @@ export default function SeancesStat() {
         acc[date] += item.tasksCompleted;
         return acc;
       }, {});
+
+      // Ensure today's date is included with a value of 0 if not present
+      const today = format(startOfToday(), 'yyyy-MM-dd');
+      if (!aggregatedData[today]) {
+        aggregatedData[today] = 0;
+      }
 
       // Transform the aggregated data for the LineChart
       const lineChartData = Object.keys(aggregatedData).map(date => ({
@@ -95,7 +101,7 @@ export default function SeancesStat() {
           borderRadius: 16,
         }}
       />
-      <Text style={styles.chartTextTitle}>Niveau des séances éffectueés cette semaine</Text>
+      <Text style={styles.chartTextTitle}>Niveau des séances éffectueés ce mois</Text>
       <PieChart
         data={pieData}
         width={Dimensions.get('window').width - 40}
