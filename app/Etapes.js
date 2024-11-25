@@ -1,12 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, FlatList, TouchableOpacity, Alert } from 'react-native';
-import { useRoute } from '@react-navigation/native';
+import { useRoute, useFocusEffect } from '@react-navigation/native';
 import { format } from 'date-fns';
 
 export default function EtapesPage() {
   const route = useRoute();
-  const { etapes, niveau } = route.params.session;
-  const [steps, setSteps] = useState(etapes);
+  const { niveau } = route.params.session;
+  const [steps, setSteps] = useState([]);
+
+  // Function to fetch steps from the backend
+  const fetchSteps = async () => {
+    try {
+      const response = await fetch(`http://192.168.2.54:3000/getSessions`);
+      const data = await response.json();
+      const session = data.find(session => session._id === route.params.session._id);
+      if (session) {
+        setSteps(session.etapes);
+      }
+    } catch (error) {
+      console.error('Erreur lors de la récupération des étapes:', error);
+      Alert.alert('Erreur', 'Impossible de récupérer les étapes.');
+    }
+  };
+
+  // Use useFocusEffect to fetch steps when the screen is focused
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchSteps();
+    }, [])
+  );
 
   // Function to toggle the state of the step and update in the backend
   const toggleStepState = async (index) => {
