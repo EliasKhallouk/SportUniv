@@ -15,6 +15,8 @@ export default function SeancesList() {
       try {
         const response = await fetch('http://192.168.2.54:3000/getSessions'); // Adresse de ton serveur
         const data = await response.json();
+        // Sort sessions to have "Séance Personnalisé" first
+        data.sort((a, b) => (a.nom === "Séance Personnalisé" ? -1 : b.nom === "Séance Personnalisé" ? 1 : 0));
         setSessions(data);
       } catch (error) {
         console.error('Erreur de récupération des séances:', error);
@@ -54,7 +56,10 @@ export default function SeancesList() {
         renderItem={({ item }) => (
           <TouchableOpacity
             onPress={() => navigation.navigate('Etapes', { session: item })}
-            style={styles.sessionContainer}
+            style={[
+              styles.sessionContainer,
+              item.nom === "Séance Personnalisé" && styles.customSessionContainer
+            ]}
           >
             <Text style={styles.sessionTextTitle}>
               {item.nom} par {item.creePar.prenom}
@@ -130,5 +135,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
+  },
+  customSessionContainer: {
+    backgroundColor: '#e0f7fa',
+    borderColor: '#00796b',
+    borderWidth: 2,
   },
 });
